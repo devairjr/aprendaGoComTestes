@@ -5,6 +5,16 @@ import (
 	"testing"
 )
 
+type Pessoa struct {
+	Nome   string
+	Perfil Perfil
+}
+
+type Perfil struct {
+	Idade  int
+	Cidade string
+}
+
 func TestPercorre(t *testing.T) {
 
 	casos := []struct {
@@ -27,6 +37,38 @@ func TestPercorre(t *testing.T) {
 			}{"Chris", "Londres"},
 			[]string{"Chris", "Londres"},
 		},
+		{
+			"Struct sem campo tipo string",
+			struct {
+				Nome  string
+				Idade int
+			}{"Chris", 33},
+			[]string{"Chris"},
+		},
+		{
+			"Campo aninhados",
+			Pessoa{
+				"Chris",
+				Perfil{33, "Londres"},
+			},
+			[]string{"Chris", "Londres"},
+		},
+		{
+			"Ponteiros para coisas",
+			&Pessoa{
+				"Chris",
+				Perfil{33, "Londres"},
+			},
+			[]string{"Chris", "Londres"},
+		},
+		{
+			"Slices",
+			[]Perfil{
+				{33, "Londres"},
+				{34, "Reykjavík"},
+			},
+			[]string{"Londres", "Reykjavík"},
+		},
 	}
 
 	for _, teste := range casos {
@@ -43,5 +85,5 @@ func TestPercorre(t *testing.T) {
 	}
 }
 
-// parei aqui (07/07/2023)
-// https://larien.gitbook.io/aprenda-go-com-testes/primeiros-passos-com-go/reflection#refatoracao-1
+// Parei aqui 11/07/2023
+// https://larien.gitbook.io/aprenda-go-com-testes/primeiros-passos-com-go/reflection#escreva-o-teste-primeiro-7
