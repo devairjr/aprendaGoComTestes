@@ -16,7 +16,6 @@ type Perfil struct {
 }
 
 func TestPercorre(t *testing.T) {
-
 	casos := []struct {
 		Nome              string
 		Entrada           interface{}
@@ -69,6 +68,14 @@ func TestPercorre(t *testing.T) {
 			},
 			[]string{"Londres", "Reykjavík"},
 		},
+		{
+			"Arrays",
+			[2]Perfil{
+				{33, "Londres"},
+				{34, "Reykjavík"},
+			},
+			[]string{"Londres", "Reykjavík"},
+		},
 	}
 
 	for _, teste := range casos {
@@ -83,7 +90,32 @@ func TestPercorre(t *testing.T) {
 			}
 		})
 	}
+
+	t.Run("com maps", func(t *testing.T) {
+		mapA := map[string]string{
+			"Foo": "Bar",
+			"Baz": "Boz",
+		}
+
+		var resultado []string
+		percorre(mapA, func(entrada string) {
+			resultado = append(resultado, entrada)
+		})
+
+		verificaSeContem(t, resultado, "Bar")
+		verificaSeContem(t, resultado, "Boz")
+	})
 }
 
-// Parei aqui 11/07/2023
-// https://larien.gitbook.io/aprenda-go-com-testes/primeiros-passos-com-go/reflection#escreva-o-teste-primeiro-7
+func verificaSeContem(t *testing.T, palheiro []string, agulha string) {
+	contem := false
+
+	for _, x := range palheiro {
+		if x == agulha {
+			contem = true
+		}
+	}
+	if !contem {
+		t.Errorf("esperava-se que %+v contivesse '%s', mas não continha", palheiro, agulha)
+	}
+}
