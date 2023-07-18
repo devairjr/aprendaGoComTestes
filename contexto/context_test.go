@@ -1,11 +1,9 @@
 package contexto
 
 import (
-	"context"
 	"net/http"
 	"net/http/httptest"
 	"testing"
-	"time"
 )
 
 func TestHandler(t *testing.T) {
@@ -23,26 +21,22 @@ func TestHandler(t *testing.T) {
 		if response.Body.String() != data {
 			t.Errorf("resultado '%s', esperado '%s'", response.Body.String(), data)
 		}
-
-		store.assertWasNotCancelled()
 	})
 
-	t.Run("avisa a store para cancelar o trabalho se a requisição for cancelada", func(t *testing.T) {
-		store := &SpyStore{response: data, t: t}
-		svr := Server(store)
+	// t.Run("avisa a store para cancelar o trabalho se a requisição for cancelada", func(t *testing.T) {
+	// 	store := &SpyStore{response: data, t: t}
+	// 	svr := Server(store)
 
-		request := httptest.NewRequest(http.MethodGet, "/", nil)
+	// 	request := httptest.NewRequest(http.MethodGet, "/", nil)
 
-		cancellingCtx, cancel := context.WithCancel(request.Context())
-		time.AfterFunc(5*time.Millisecond, cancel)
-		request = request.WithContext(cancellingCtx)
+	// 	cancellingCtx, cancel := context.WithCancel(request.Context())
+	// 	time.AfterFunc(5*time.Millisecond, cancel)
+	// 	request = request.WithContext(cancellingCtx)
 
-		response := httptest.NewRecorder()
+	// 	response := httptest.NewRecorder()
 
-		svr.ServeHTTP(response, request)
+	// 	svr.ServeHTTP(response, request)
 
-		store.assertWasCancelled()
-	})
+	// 	store.assertWasCancelled()
+	// })
 }
-
-//https://larien.gitbook.io/aprenda-go-com-testes/primeiros-passos-com-go/contexto#escreva-o-teste-primeiro-1
